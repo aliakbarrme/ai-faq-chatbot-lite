@@ -1,5 +1,5 @@
 === AI FAQ Chatbot Lite ===
-Contributors: aliakbar45480
+Contributors: aliakbarrme
 Tags: chatbot, faq, ai, openai, chat
 Requires at least: 5.8
 Tested up to: 6.5

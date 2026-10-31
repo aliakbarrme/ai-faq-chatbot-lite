@@ -35,7 +35,7 @@ Tested on WordPress 6.5 with PHP 8.3. Single file, no external libraries.
 ## 👋 Author
 
 **Ali Akbar** — Founder & Senior Developer at BD Webhut
-Need a WordPress website, a WooCommerce store or an AI chatbot? **[Hire me on Upwork](https://www.upwork.com/freelancers/~014c9f290133791047)** · [More tools](https://github.com/Aliakbar45480)
+Need a WordPress website, a WooCommerce store or an AI chatbot? **[Hire me on Upwork](https://www.upwork.com/freelancers/~014c9f290133791047)** · [More tools](https://github.com/aliakbarrme)
 
 ## 📄 License
 

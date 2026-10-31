@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name:       AI FAQ Chatbot Lite
- * Plugin URI:        https://github.com/Aliakbar45480/ai-faq-chatbot-lite
+ * Plugin URI:        https://github.com/aliakbarrme/ai-faq-chatbot-lite
  * Description:       A lightweight chat widget that answers visitor questions from your own FAQ, 24/7. Works offline with smart matching, or plug in an OpenAI API key for natural AI answers grounded in your FAQ.
  * Version:           1.0.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Ali Akbar (BD Webhut)
- * Author URI:        https://github.com/Aliakbar45480
+ * Author URI:        https://github.com/aliakbarrme
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       ai-faq-chatbot-lite
