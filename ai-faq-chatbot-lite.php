@@ -3,7 +3,7 @@
  * Plugin Name:       AI FAQ Chatbot Lite
  * Plugin URI:        https://github.com/aliakbarrme/ai-faq-chatbot-lite
  * Description:       A modern chat widget that answers visitor questions from your own FAQ, 24/7. Works offline with smart matching, or connect a free Google Gemini / Groq key (or OpenAI) for natural AI answers grounded in your FAQ.
- * Version:           2.0.0
+ * Version:           2.1.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Ali Akbar (BD Webhut)
@@ -21,7 +21,7 @@ final class AIFAQ_Bot {
 
 	const OPTION  = 'aifaq_settings';
 	const NS      = 'ai-faq-bot/v1';
-	const VERSION = '2.0.0';
+	const VERSION = '2.1.0';
 
 	/** Default model per AI provider. */
 	const MODELS = array(
@@ -42,6 +42,8 @@ final class AIFAQ_Bot {
 			'whatsapp' => '',
 			'avatar'   => '',
 			'color'    => '#2e6bf7',
+			'auto'     => 1,
+			'icon'     => 'sparkle',
 			'theme'    => 'light',
 			'position' => 'right',
 			'chips'    => 4,
@@ -195,7 +197,7 @@ final class AIFAQ_Bot {
 	}
 
 	private static function tokens( $s ) {
-		static $stop = array( 'the', 'a', 'an', 'is', 'are', 'am', 'was', 'do', 'does', 'did', 'you', 'your', 'yours', 'i', 'me', 'my', 'we', 'us', 'our', 'to', 'of', 'for', 'and', 'or', 'in', 'on', 'at', 'it', 'its', 'this', 'that', 'can', 'could', 'would', 'will', 'should', 'how', 'what', 'when', 'where', 'which', 'who', 'why', 'with', 'be', 'have', 'has', 'there', 'any', 'please', 'about', 'tell', 'know', 'want', 'need', 'like', 'get', 'much', 'many', 'some', 'just', 'so', 'if', 'hi', 'hello', 'hey', 'thanks', 'ki', 'ke', 'ar', 'ami', 'amar', 'apnar', 'apni', 'apnara', 'tomar', 'na', 'ta', 'te', 'er', 'kore', 'hobe', 'ache', 'jodi', 'kivabe', 'keno', 'ur', 'u', 'r', 'pls', 'plz', 'whats', 'by', 'from', 'vai', 'bhai', 'vaiya', 'bro', 'sir', 'banate', 'banan', 'banaben', 'banaite', 'koren', 'korben', 'korte', 'diben', 'parben', 'chai', 'lagbe', 'den', 'link', 'bd', 'webhut', 'ok', 'okay', 'yes', 'no', 'also', 'only', 'new', 'one', 'it', 'up' );
+		static $stop = array( 'the', 'a', 'an', 'is', 'are', 'am', 'was', 'do', 'does', 'did', 'you', 'your', 'yours', 'i', 'me', 'my', 'we', 'us', 'our', 'to', 'of', 'for', 'and', 'or', 'in', 'on', 'at', 'it', 'its', 'this', 'that', 'can', 'could', 'would', 'will', 'should', 'how', 'what', 'when', 'where', 'which', 'who', 'why', 'with', 'be', 'have', 'has', 'there', 'any', 'please', 'about', 'tell', 'know', 'want', 'need', 'like', 'get', 'much', 'many', 'some', 'just', 'so', 'if', 'hi', 'hello', 'hey', 'thanks', 'ki', 'ke', 'ar', 'ami', 'amar', 'apnar', 'apni', 'apnara', 'tomar', 'na', 'ta', 'te', 'er', 'kore', 'hobe', 'ache', 'jodi', 'kivabe', 'keno', 'ur', 'u', 'r', 'pls', 'plz', 'whats', 'by', 'from', 'vai', 'bhai', 'vaiya', 'bro', 'sir', 'banate', 'banan', 'banaben', 'banaite', 'koren', 'korben', 'korte', 'diben', 'parben', 'chai', 'lagbe', 'den', 'link', 'bd', 'webhut', 'ok', 'okay', 'yes', 'no', 'also', 'only', 'new', 'one', 'it', 'up', 'give', 'send', 'share', 'see', 'let', 'some', 'something', 'thing', 'things', 'kindly', 'dear' );
 		$map   = self::canon_map();
 		$words = preg_split( '/[^\p{L}\p{N}\p{M}]+/u', strtr( ' ' . mb_strtolower( $s ) . ' ', self::phrases() ), -1, PREG_SPLIT_NO_EMPTY );
 		$out   = array();
@@ -523,6 +525,8 @@ final class AIFAQ_Bot {
 			'whatsapp' => preg_replace( '/[^0-9]/', '', (string) ( $in['whatsapp'] ?? '' ) ),
 			'avatar'   => esc_url_raw( $in['avatar'] ?? '' ),
 			'color'    => sanitize_hex_color( $in['color'] ?? '' ) ? sanitize_hex_color( $in['color'] ) : $d['color'],
+			'auto'     => empty( $in['auto'] ) ? 0 : 1,
+			'icon'     => in_array( $in['icon'] ?? '', array( 'sparkle', 'chat', 'robot', 'logo' ), true ) ? $in['icon'] : 'sparkle',
 			'theme'    => in_array( $in['theme'] ?? '', array( 'light', 'dark' ), true ) ? $in['theme'] : 'light',
 			'position' => in_array( $in['position'] ?? '', array( 'right', 'left' ), true ) ? $in['position'] : 'right',
 			'chips'    => min( 8, absint( $in['chips'] ?? $d['chips'] ) ),
@@ -591,6 +595,15 @@ final class AIFAQ_Bot {
 					<tr><th scope="row"><label for="aifaq_whatsapp">WhatsApp number</label></th><td><input id="aifaq_whatsapp" class="regular-text" name="<?php echo $f( 'whatsapp' ); ?>" value="<?php echo esc_attr( $o['whatsapp'] ); ?>" placeholder="8801XXXXXXXXX" />
 						<p class="description">With country code, digits only. Shown as a "Chat on WhatsApp" button when the bot can't help.</p></td></tr>
 					<tr><th scope="row"><label for="aifaq_contact">Contact page URL</label></th><td><input id="aifaq_contact" class="regular-text" name="<?php echo $f( 'contact' ); ?>" value="<?php echo esc_attr( $o['contact'] ); ?>" placeholder="https://example.com/contact" /></td></tr>
+					<tr><th scope="row">Match my site</th><td><label><input type="checkbox" name="<?php echo $f( 'auto' ); ?>" value="1" <?php checked( $o['auto'] ); ?> /> Pick the brand color and light/dark theme from my website automatically</label>
+						<p class="description">When on, the color and theme below are only used if detection fails.</p></td></tr>
+					<tr><th scope="row"><label for="aifaq_icon">Chat button icon</label></th><td>
+						<select id="aifaq_icon" name="<?php echo $f( 'icon' ); ?>">
+							<option value="sparkle" <?php selected( $o['icon'], 'sparkle' ); ?>>AI sparkle chat</option>
+							<option value="chat" <?php selected( $o['icon'], 'chat' ); ?>>Chat bubble</option>
+							<option value="robot" <?php selected( $o['icon'], 'robot' ); ?>>Robot</option>
+							<option value="logo" <?php selected( $o['icon'], 'logo' ); ?>>My logo (avatar)</option>
+						</select></td></tr>
 					<tr><th scope="row"><label for="aifaq_color">Brand color</label></th><td><input id="aifaq_color" type="color" name="<?php echo $f( 'color' ); ?>" value="<?php echo esc_attr( $o['color'] ); ?>" /></td></tr>
 					<tr><th scope="row">Theme</th><td>
 						<label><input type="radio" name="<?php echo $f( 'theme' ); ?>" value="light" <?php checked( $o['theme'], 'light' ); ?> /> Light</label> &nbsp;
@@ -621,6 +634,8 @@ final class AIFAQ_Bot {
 			'whatsapp' => $o['whatsapp'],
 			'avatar'   => $avatar ? esc_url_raw( $avatar ) : '',
 			'color'    => $o['color'],
+			'auto'     => (int) $o['auto'],
+			'icon'     => $o['icon'],
 			'theme'    => $o['theme'],
 			'position' => $o['position'],
 			'footer'   => $o['footer'],
@@ -643,6 +658,15 @@ var C=window.AIFAQ_CONFIG||{},host=document.getElementById('aifaq-root');if(!hos
 var R=host.attachShadow({mode:'open'});
 function hex(h){h=(h||'#2e6bf7').replace('#','');if(h.length===3)h=h.split('').map(function(c){return c+c}).join('');return[parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)]}
 function shade(c,p){return'rgb('+c.map(function(v){return Math.round(p<0?v*(1+p):v+(255-v)*p)}).join(',')+')'}
+function parse(c){var m=String(c).match(/rgba?\(([^)]+)\)/);if(!m)return null;var v=m[1].split(/[ ,\/]+/).filter(Boolean).map(parseFloat);return{r:v[0],g:v[1],b:v[2],a:v.length>3?v[3]:1}}
+function hsl(c){var r=c.r/255,g=c.g/255,b=c.b/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d=mx-mn;return{s:d?d/(1-Math.abs(2*l-1)):0,l:l}}
+function toHex(c){return'#'+[c.r,c.g,c.b].map(function(v){return('0'+Math.round(v).toString(16)).slice(-2)}).join('')}
+function siteColor(){var score={},els=document.querySelectorAll('.elementor-button,.wp-block-button__link,a[class*="button"],a[class*="btn"],button,input[type="submit"]');
+ for(var i=0;i<els.length&&i<250;i++){var e=els[i];if(e.closest('#aifaq-root'))continue;var c=parse(getComputedStyle(e).backgroundColor);if(!c||c.a<0.6)continue;var h=hsl(c);if(h.s<0.3||h.l<0.16||h.l>0.9)continue;var r=e.getBoundingClientRect(),k=toHex(c);score[k]=(score[k]||0)+Math.max(400,r.width*r.height)}
+ var best=null,top=0;for(var k in score)if(score[k]>top){top=score[k];best=k}return best}
+function siteDark(){var pts=[[.5,.5],[.25,.3],[.75,.7],[.5,.9]],sum=0,n=0;pts.forEach(function(p){var e=document.elementFromPoint(innerWidth*p[0],innerHeight*p[1]);while(e&&e!==document.documentElement){var c=parse(getComputedStyle(e).backgroundColor);if(c&&c.a>0.5){sum+=(0.299*c.r+0.587*c.g+0.114*c.b)/255;n++;return}e=e.parentElement}});
+ if(!n){var c=parse(getComputedStyle(document.body).backgroundColor);if(c&&c.a>0.5){sum=(0.299*c.r+0.587*c.g+0.114*c.b)/255;n=1}}return n?sum/n<0.4:null}
+if(C.auto){var sc=siteColor();if(sc)C.color=sc;var sd=siteDark();if(sd!==null)C.theme=sd?'dark':'light'}
 var rgb=hex(C.color),lum=(0.299*rgb[0]+0.587*rgb[1]+0.114*rgb[2])/255,onAcc=lum>0.62?'#0b1220':'#ffffff';
 var dark=C.theme==='dark',left=C.position==='left';
 var css=`
@@ -657,7 +681,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .launch:after{content:"";position:absolute;inset:-5px;border-radius:50%;z-index:-2;background:var(--a);filter:blur(10px);opacity:.2;animation:glow 3s ease-in-out infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes glow{0%,100%{opacity:.12;transform:scale(.95)}50%{opacity:.3;transform:scale(1.03)}}
-.launch .ic1{animation:nudge 6s ease-in-out 2s infinite}
+.launch svg.ic1{animation:nudge 6s ease-in-out 2s infinite}
 @keyframes nudge{0%,86%,100%{transform:none}89%{transform:rotate(-14deg) scale(1.12)}92%{transform:rotate(11deg) scale(1.12)}95%{transform:rotate(-6deg)}98%{transform:rotate(3deg)}}
 .open .launch .ic1{animation:none}
 .open .launch:before,.open .launch:after{animation-play-state:paused;opacity:0}
@@ -665,6 +689,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .launch .mouth{fill:var(--a);opacity:.7}.launch .ant{fill:var(--a);stroke:currentColor;stroke-width:1.6;animation:ant 2s ease-in-out infinite}
 @keyframes ant{0%,100%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 3px var(--a))}}
 .launch .chev{stroke:var(--a)}
+.launch .spk{fill:var(--a);transform-box:fill-box;transform-origin:center;animation:twinkle 3.2s ease-in-out infinite}
+.launch .spk.s2{animation-delay:.5s}
+@keyframes twinkle{0%,70%,100%{transform:scale(1) rotate(0)}80%{transform:scale(1.25) rotate(45deg)}90%{transform:scale(.9) rotate(90deg)}}
+.launch .dot{fill:var(--a);animation:dots 1.6s ease-in-out infinite}.launch .dot:nth-child(3){animation-delay:.15s}.launch .dot:nth-child(4){animation-delay:.3s}
+@keyframes dots{0%,60%,100%{opacity:.55}30%{opacity:1}}
+.launch .lg{position:absolute;width:44px;height:44px;border-radius:50%;background:var(--avbg) center/64% no-repeat;box-shadow:0 0 0 2px rgba(255,255,255,.35);transition:transform .3s cubic-bezier(.2,.9,.3,1.2),opacity .2s}
+.open .launch .lg{opacity:0;transform:rotate(90deg) scale(.6)}
 @keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
 .launch svg{position:absolute;width:34px;height:34px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));transition:transform .3s cubic-bezier(.2,.9,.3,1.2),opacity .2s}
 .launch .ic2{opacity:0;transform:rotate(-90deg) scale(.6)}
@@ -737,6 +768,8 @@ textarea::placeholder{color:var(--mu)}
 var I={
  chat:'<svg viewBox="0 0 32 32"><path d="M16 3.5v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle class="ant" cx="16" cy="3.2" r="2.1"/><rect x="1.6" y="13.5" width="3.4" height="8" rx="1.7" fill="currentColor"/><rect x="27" y="13.5" width="3.4" height="8" rx="1.7" fill="currentColor"/><rect x="4.5" y="7.5" width="23" height="19.5" rx="7.5" fill="currentColor"/><rect class="visor" x="8" y="11.2" width="16" height="9.6" rx="4.8"/><rect class="eye" x="10.9" y="13.6" width="3.2" height="4.8" rx="1.6"/><rect class="eye" x="17.9" y="13.6" width="3.2" height="4.8" rx="1.6"/><rect class="mouth" x="13.6" y="22.6" width="4.8" height="1.6" rx=".8"/></svg>',
  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+ sparkle:'<svg viewBox="0 0 32 32"><path d="M8 4.5h16a5.5 5.5 0 0 1 5.5 5.5v9.6a5.5 5.5 0 0 1-5.5 5.5h-7.4l-6.3 4.6a.8.8 0 0 1-1.3-.65V25.1H8a5.5 5.5 0 0 1-5.5-5.5V10A5.5 5.5 0 0 1 8 4.5z" fill="currentColor"/><path class="spk" d="M15.2 8.4c.7 3.6 2.3 5.2 5.9 5.9-3.6.7-5.2 2.3-5.9 5.9-.7-3.6-2.3-5.2-5.9-5.9 3.6-.7 5.2-2.3 5.9-5.9z"/><path class="spk s2" d="M22.6 7.3c.3 1.4.9 2 2.3 2.3-1.4.3-2 .9-2.3 2.3-.3-1.4-.9-2-2.3-2.3 1.4-.3 2-.9 2.3-2.3z"/></svg>',
+ bubble:'<svg viewBox="0 0 32 32"><path d="M8 4.5h16a5.5 5.5 0 0 1 5.5 5.5v9.6a5.5 5.5 0 0 1-5.5 5.5h-7.4l-6.3 4.6a.8.8 0 0 1-1.3-.65V25.1H8a5.5 5.5 0 0 1-5.5-5.5V10A5.5 5.5 0 0 1 8 4.5z" fill="currentColor"/><circle class="dot" cx="10.5" cy="14.8" r="1.9"/><circle class="dot" cx="16" cy="14.8" r="1.9"/><circle class="dot" cx="21.5" cy="14.8" r="1.9"/></svg>',
  close:'<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="currentColor"/><path class="chev" d="m10.5 13.5 5.5 5.5 5.5-5.5" fill="none" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
@@ -747,6 +780,7 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 function md(s){var lines=esc(s).split('\n'),out='',list=false;lines.forEach(function(l){var m=l.match(/^\s*[-•*]\s+(.*)$/);if(m){if(!list){out+='<ul>';list=true}out+='<li>'+m[1]+'</li>';return}if(list){out+='</ul>';list=false}out+=l+'<br>'});if(list)out+='</ul>';out=out.replace(/(<br>)+$/,'');
  out=out.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>').replace(/(^|[\s(>])(https?:\/\/[^\s<]+[^\s<.,)])/g,'$1<a href="$2" target="_blank" rel="noopener">$2</a>');return out}
 var initial=(C.name||'A').trim().charAt(0).toUpperCase();
+function launchIcon(){if(C.icon==='logo'&&C.avatar)return'<span class="ic1 lg" data-av style="background-image:url(\''+esc(C.avatar)+'\')"></span>';var k=C.icon==='robot'?'chat':C.icon==='chat'?'bubble':'sparkle';return I[k].replace('<svg','<svg class="ic1"')}
 function avatarHTML(cls){return C.avatar?'<div data-av class="'+cls+'" style="background-image:url(\''+esc(C.avatar)+'\')"></div>':'<div class="'+cls+'">'+esc(initial)+'</div>'}
 /* The avatar sits on a black circle: turn the logo's dark lines white so nothing disappears. */
 function brightenLogo(){if(!C.avatar)return;var img=new Image();img.crossOrigin='anonymous';img.onload=function(){try{var c=document.createElement('canvas'),w=c.width=img.naturalWidth,h=c.height=img.naturalHeight,x=c.getContext('2d');x.drawImage(img,0,0);var d=x.getImageData(0,0,w,h),p=d.data,hit=0;
@@ -755,7 +789,7 @@ function brightenLogo(){if(!C.avatar)return;var img=new Image();img.crossOrigin=
 R.innerHTML='<style>'+css+'</style><div class="w"><div class="teaser" role="button" tabindex="0">'+avatarHTML('tav')+'<p></p><button class="tx" aria-label="Dismiss">✕</button></div>'
  +'<div class="panel" role="dialog" aria-label="Chat"><div class="head"><div class="av">'+avatarHTML('img')+'<i></i></div><div class="ht"><b></b><span></span></div><button class="hb rs" aria-label="New conversation" title="New conversation">'+I.reset+'</button><button class="hb x" aria-label="Minimize chat">'+I.down+'</button></div>'
  +'<div class="log" aria-live="polite"></div><div class="foot"><form class="box"><textarea rows="1" maxlength="500" placeholder="Write a message…" aria-label="Your message"></textarea><button class="send" type="submit" aria-label="Send" disabled>'+I.send+'</button></form>'+(C.footer?'<div class="brand">'+esc(C.footer)+'</div>':'')+'</div></div>'
- +'<button class="launch" aria-label="Open chat"><span class="pulse"></span>'+I.chat.replace('<svg','<svg class="ic1"')+I.close.replace('<svg','<svg class="ic2"')+'<span class="badge"></span></button></div>';
+ +'<button class="launch" aria-label="Open chat"><span class="pulse"></span>'+launchIcon()+I.close.replace('<svg','<svg class="ic2"')+'<span class="badge"></span></button></div>';
 var $=function(s){return R.querySelector(s)},W=$('.w'),log=$('.log'),ta=$('textarea'),send=$('.send'),teaser=$('.teaser');
 brightenLogo();$('.ht b').textContent=C.name||'Assistant';$('.ht span').textContent=C.subtitle||'';$('.teaser p').textContent=C.teaser||'';
 var KEY='aifaq_chat_v2',st;try{st=JSON.parse(sessionStorage.getItem(KEY))||{}}catch(e){st={}}st.msgs=st.msgs||[];

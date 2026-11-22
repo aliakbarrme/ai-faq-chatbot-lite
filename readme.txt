@@ -4,7 +4,7 @@ Tags: chatbot, faq, ai, openai, chat
 Requires at least: 5.8
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,11 @@ Built from my experience creating **Monkbot**, an AI chatbot that has handled 37
 3. Open Settings → AI FAQ Chatbot.
 
 == Changelog ==
+
+= 2.1.0 =
+* Matches your website automatically: brand color from your buttons, light/dark from your background
+* Choose the chat button icon: AI sparkle chat (new default), chat bubble, robot or your logo
+* Understands more casual phrasing ("give me some portfolio")
 
 = 2.0.0 =
 * New premium chat design in a Shadow DOM, so themes can no longer break it
