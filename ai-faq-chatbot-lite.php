@@ -3,7 +3,7 @@
  * Plugin Name:       AI FAQ Chatbot Lite
  * Plugin URI:        https://github.com/aliakbarrme/ai-faq-chatbot-lite
  * Description:       A modern chat widget that answers visitor questions from your own FAQ, 24/7. Works offline with smart matching, or connect a free Google Gemini / Groq key (or OpenAI) for natural AI answers grounded in your FAQ.
- * Version:           2.1.0
+ * Version:           2.1.1
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Ali Akbar (BD Webhut)
@@ -21,11 +21,11 @@ final class AIFAQ_Bot {
 
 	const OPTION  = 'aifaq_settings';
 	const NS      = 'ai-faq-bot/v1';
-	const VERSION = '2.1.0';
+	const VERSION = '2.1.1';
 
 	/** Default model per AI provider. */
 	const MODELS = array(
-		'gemini' => 'gemini-2.5-flash',
+		'gemini' => 'gemini-3.5-flash-lite',
 		'groq'   => 'llama-3.3-70b-versatile',
 		'openai' => 'gpt-4o-mini',
 	);
@@ -428,26 +428,40 @@ final class AIFAQ_Bot {
 				'role'  => 'user',
 				'parts' => array( array( 'text' => $q ) ),
 			);
-			$res = wp_remote_post(
-				'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode( $model ) . ':generateContent',
+			$body_json = wp_json_encode(
 				array(
-					'timeout' => 25,
-					'headers' => array(
-						'x-goog-api-key' => $o['api_key'],
-						'Content-Type'   => 'application/json',
-					),
-					'body'    => wp_json_encode(
-						array(
-							'systemInstruction' => array( 'parts' => array( array( 'text' => $system ) ) ),
-							'contents'          => $contents,
-							'generationConfig'  => array(
-								'temperature'     => 0.3,
-								'maxOutputTokens' => 400,
-							),
-						)
+					'systemInstruction' => array( 'parts' => array( array( 'text' => $system ) ) ),
+					'contents'          => $contents,
+					'generationConfig'  => array(
+						'temperature'     => 0.3,
+						'maxOutputTokens' => 400,
 					),
 				)
 			);
+			$call = function ( $m ) use ( $o, $body_json ) {
+				return wp_remote_post(
+					'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode( $m ) . ':generateContent',
+					array(
+						'timeout' => 20,
+						'headers' => array(
+							'x-goog-api-key' => $o['api_key'],
+							'Content-Type'   => 'application/json',
+						),
+						'body'    => $body_json,
+					)
+				);
+			};
+			$res = $call( $model );
+			// Google retires models; when it names a replacement, switch to it once and remember it.
+			if ( ! is_wp_error( $res ) && 404 === wp_remote_retrieve_response_code( $res )
+				&& preg_match( '#use models/([A-Za-z0-9._-]+)#', (string) wp_remote_retrieve_body( $res ), $mm ) ) {
+				$res = $call( $mm[1] );
+				if ( ! is_wp_error( $res ) && 200 === wp_remote_retrieve_response_code( $res ) ) {
+					$saved          = get_option( self::OPTION, array() );
+					$saved['model'] = $mm[1];
+					update_option( self::OPTION, $saved );
+				}
+			}
 			if ( is_wp_error( $res ) || 200 !== wp_remote_retrieve_response_code( $res ) ) {
 				return null; // Falls back to offline matching.
 			}

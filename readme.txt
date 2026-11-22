@@ -4,7 +4,7 @@ Tags: chatbot, faq, ai, openai, chat
 Requires at least: 5.8
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,10 @@ Built from my experience creating **Monkbot**, an AI chatbot that has handled 37
 3. Open Settings → AI FAQ Chatbot.
 
 == Changelog ==
+
+= 2.1.1 =
+* Default Gemini model is now gemini-3.5-flash-lite (older models are closed to new keys)
+* If Google retires a model, the plugin switches to the replacement Google names
 
 = 2.1.0 =
 * Matches your website automatically: brand color from your buttons, light/dark from your background
