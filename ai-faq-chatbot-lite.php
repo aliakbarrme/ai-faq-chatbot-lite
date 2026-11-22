@@ -648,10 +648,10 @@ var dark=C.theme==='dark',left=C.position==='left';
 var css=`
 :host{all:initial}
 *{box-sizing:border-box;margin:0;padding:0;font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Bengali",sans-serif}
-.w{--a:${C.color};--a2:${shade(rgb,-0.28)};--on:${onAcc};--bg:${dark?'#0f1115':'#ffffff'};--glass:${dark?'rgba(13,15,19,.66)':'rgba(255,255,255,.70)'};--soft:${dark?'rgba(255,255,255,.05)':'rgba(255,255,255,.65)'};--card:${dark?'rgba(255,255,255,.07)':'rgba(255,255,255,.85)'};--line:${dark?'rgba(255,255,255,.10)':'rgba(15,23,42,.08)'};--avbg:#ffffff;--tx:${dark?'#eef1f6':'#0f172a'};--mu:${dark?'#9aa4b2':'#64748b'};
+.w{--a:${C.color};--a2:${shade(rgb,-0.28)};--on:${onAcc};--bg:${dark?'#0f1115':'#ffffff'};--glass:${dark?'rgba(13,15,19,.66)':'rgba(255,255,255,.70)'};--soft:${dark?'rgba(255,255,255,.05)':'rgba(255,255,255,.65)'};--card:${dark?'rgba(255,255,255,.07)':'rgba(255,255,255,.85)'};--line:${dark?'rgba(255,255,255,.10)':'rgba(15,23,42,.08)'};--avbg:#0b0b0d;--tx:${dark?'#eef1f6':'#0f172a'};--mu:${dark?'#9aa4b2':'#64748b'};
  position:fixed;${left?'left':'right'}:24px;bottom:24px;z-index:2147483000;font-size:14px;line-height:1.5;color:var(--tx);-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-.launch{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--a2));color:var(--on);display:grid;place-items:center;box-shadow:0 8px 20px -8px rgba(0,0,0,.45);transition:transform .25s cubic-bezier(.2,.9,.3,1.3),box-shadow .25s;position:relative}
+.launch{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 32% 24%,rgba(255,255,255,.55),transparent 42%),linear-gradient(145deg,var(--a) 20%,var(--a2));color:var(--on);display:grid;place-items:center;box-shadow:0 8px 20px -8px rgba(0,0,0,.45);transition:transform .25s cubic-bezier(.2,.9,.3,1.3),box-shadow .25s;position:relative}
 .launch:hover{transform:scale(1.08) rotate(-4deg)}
 .launch:before{content:"";position:absolute;inset:-4px;border-radius:50%;z-index:-1;background:conic-gradient(from 0deg,var(--a),transparent 25%,color-mix(in srgb,var(--a) 70%,#fff) 50%,transparent 75%,var(--a));animation:spin 3.2s linear infinite}
 .launch:after{content:"";position:absolute;inset:-5px;border-radius:50%;z-index:-2;background:var(--a);filter:blur(10px);opacity:.2;animation:glow 3s ease-in-out infinite}
@@ -661,9 +661,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @keyframes nudge{0%,86%,100%{transform:none}89%{transform:rotate(-14deg) scale(1.12)}92%{transform:rotate(11deg) scale(1.12)}95%{transform:rotate(-6deg)}98%{transform:rotate(3deg)}}
 .open .launch .ic1{animation:none}
 .open .launch:before,.open .launch:after{animation-play-state:paused;opacity:0}
-.launch .eye{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+.launch .visor{fill:#1d2433}.launch .eye{fill:var(--a);filter:drop-shadow(0 0 2.5px var(--a));transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+.launch .mouth{fill:var(--a);opacity:.7}.launch .ant{fill:var(--a);stroke:currentColor;stroke-width:1.6;animation:ant 2s ease-in-out infinite}
+@keyframes ant{0%,100%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 3px var(--a))}}
+.launch .chev{stroke:var(--a)}
 @keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
-.launch svg{position:absolute;width:28px;height:28px;transition:transform .3s cubic-bezier(.2,.9,.3,1.2),opacity .2s}
+.launch svg{position:absolute;width:34px;height:34px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));transition:transform .3s cubic-bezier(.2,.9,.3,1.2),opacity .2s}
 .launch .ic2{opacity:0;transform:rotate(-90deg) scale(.6)}
 .open .launch .ic1{opacity:0;transform:rotate(90deg) scale(.6)}
 .open .launch .ic2{opacity:1;transform:none}
@@ -675,7 +678,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .teaser{position:absolute;bottom:76px;${left?'left':'right'}:0;width:260px;background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);color:var(--tx);border:1px solid var(--line);border-radius:16px;padding:14px 34px 14px 14px;box-shadow:0 18px 40px -12px rgba(15,23,42,.35);display:flex;gap:10px;align-items:flex-start;cursor:pointer;opacity:0;transform:translateY(10px) scale(.96);transform-origin:bottom ${left?'left':'right'};pointer-events:none;transition:all .35s cubic-bezier(.2,.9,.3,1.2)}
 .teaser.show{opacity:1;transform:none;pointer-events:auto}
 .teaser p{font-size:13.5px;line-height:1.45}
-.tav{width:32px;height:32px;border-radius:50%;flex:none;background:var(--avbg) center/66% no-repeat;color:#0b0b0d;box-shadow:0 0 0 1.5px color-mix(in srgb,var(--a) 60%,transparent);display:grid;place-items:center;font-weight:700}
+.tav{width:32px;height:32px;border-radius:50%;flex:none;background:var(--avbg) center/66% no-repeat;color:var(--a);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--a) 60%,transparent);display:grid;place-items:center;font-weight:700}
 .teaser .tx{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;color:var(--mu);display:grid;place-items:center;font-size:14px}
 .teaser .tx:hover{background:var(--soft)}
 .panel{position:absolute;bottom:80px;${left?'left':'right'}:0;width:384px;height:min(640px,calc(100vh - 120px));background:radial-gradient(90% 45% at 100% 0%,color-mix(in srgb,var(--a) 16%,transparent),transparent 70%),radial-gradient(80% 40% at 0% 100%,color-mix(in srgb,var(--a) 10%,transparent),transparent 70%),var(--glass);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border:1px solid ${dark?'rgba(255,255,255,.12)':'rgba(255,255,255,.7)'};border-radius:22px;overflow:hidden;display:flex;flex-direction:column;box-shadow:inset 0 1px 0 rgba(255,255,255,${dark?'.08':'.9'}),0 30px 80px -20px rgba(0,0,0,.55),0 0 0 1px ${dark?'rgba(255,255,255,.06)':'rgba(15,23,42,.06)'};opacity:0;transform:translateY(18px) scale(.94);transform-origin:bottom ${left?'left':'right'};pointer-events:none;transition:opacity .22s ease,transform .32s cubic-bezier(.2,.9,.3,1.15)}
@@ -683,7 +686,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .head{position:relative;padding:18px 16px 18px 18px;background:linear-gradient(135deg,color-mix(in srgb,var(--a) 94%,transparent) 0%,color-mix(in srgb,var(--a2) 90%,transparent) 100%);box-shadow:0 1px 0 rgba(255,255,255,.12),0 10px 24px -12px rgba(0,0,0,.4);z-index:1;color:var(--on);display:flex;align-items:center;gap:12px}
 .head:after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 100% 0%,rgba(255,255,255,.22),transparent 55%);pointer-events:none}
 .av{position:relative;width:44px;height:44px;flex:none}
-.av .img{width:100%;height:100%;border-radius:50%;background:var(--avbg) center/66% no-repeat;color:#0b0b0d;display:grid;place-items:center;font-weight:700;font-size:17px;box-shadow:0 0 0 2px rgba(255,255,255,.45),0 6px 14px -4px rgba(0,0,0,.45)}
+.av .img{width:100%;height:100%;border-radius:50%;background:var(--avbg) center/66% no-repeat;color:var(--a);display:grid;place-items:center;font-weight:700;font-size:17px;box-shadow:0 0 0 2px rgba(255,255,255,.4),0 6px 14px -4px rgba(0,0,0,.45)}
 .av i{position:absolute;right:0;bottom:1px;width:12px;height:12px;border-radius:50%;background:#22c55e;border:2px solid var(--a2)}
 .ht{flex:1;min-width:0}
 .ht b{display:block;font-size:16px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -697,7 +700,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .row{display:flex;gap:8px;align-items:flex-end;animation:in .35s cubic-bezier(.2,.9,.3,1.1) both}
 @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .row.me{justify-content:flex-end}
-.row .mini{width:28px;height:28px;border-radius:50%;flex:none;background:var(--avbg) center/66% no-repeat;color:#0b0b0d;box-shadow:0 0 0 1.5px color-mix(in srgb,var(--a) 55%,transparent);display:grid;place-items:center;font-size:12px;font-weight:700}
+.row .mini{width:28px;height:28px;border-radius:50%;flex:none;background:var(--avbg) center/66% no-repeat;color:var(--a);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--a) 55%,transparent);display:grid;place-items:center;font-size:12px;font-weight:700}
 .row.cont .mini{visibility:hidden}
 .bub{max-width:78%;padding:10px 14px;border-radius:18px;word-wrap:break-word;font-size:14px}
 .bot .bub{background:var(--card);color:var(--tx);border:1px solid var(--line);border-bottom-left-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 14px -8px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
@@ -732,8 +735,9 @@ textarea::placeholder{color:var(--mu)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 `;
 var I={
- chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2v3.3"/><circle cx="12" cy="2.6" r="1.3" fill="currentColor" stroke="none"/><rect x="4.5" y="6.5" width="15" height="12.5" rx="4.2"/><path d="M2.4 11.5v3.5M21.6 11.5v3.5"/><ellipse class="eye" cx="9.3" cy="12" rx="1.45" ry="1.7" fill="currentColor" stroke="none"/><ellipse class="eye" cx="14.7" cy="12" rx="1.45" ry="1.7" fill="currentColor" stroke="none"/><path d="M9.6 15.6c1.4 1 3.4 1 4.8 0"/></svg>',
+ chat:'<svg viewBox="0 0 32 32"><path d="M16 3.5v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle class="ant" cx="16" cy="3.2" r="2.1"/><rect x="1.6" y="13.5" width="3.4" height="8" rx="1.7" fill="currentColor"/><rect x="27" y="13.5" width="3.4" height="8" rx="1.7" fill="currentColor"/><rect x="4.5" y="7.5" width="23" height="19.5" rx="7.5" fill="currentColor"/><rect class="visor" x="8" y="11.2" width="16" height="9.6" rx="4.8"/><rect class="eye" x="10.9" y="13.6" width="3.2" height="4.8" rx="1.6"/><rect class="eye" x="17.9" y="13.6" width="3.2" height="4.8" rx="1.6"/><rect class="mouth" x="13.6" y="22.6" width="4.8" height="1.6" rx=".8"/></svg>',
  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+ close:'<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="currentColor"/><path class="chev" d="m10.5 13.5 5.5 5.5 5.5-5.5" fill="none" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
  wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z"/></svg>',
@@ -743,13 +747,17 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 function md(s){var lines=esc(s).split('\n'),out='',list=false;lines.forEach(function(l){var m=l.match(/^\s*[-•*]\s+(.*)$/);if(m){if(!list){out+='<ul>';list=true}out+='<li>'+m[1]+'</li>';return}if(list){out+='</ul>';list=false}out+=l+'<br>'});if(list)out+='</ul>';out=out.replace(/(<br>)+$/,'');
  out=out.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>').replace(/(^|[\s(>])(https?:\/\/[^\s<]+[^\s<.,)])/g,'$1<a href="$2" target="_blank" rel="noopener">$2</a>');return out}
 var initial=(C.name||'A').trim().charAt(0).toUpperCase();
-function avatarHTML(cls){return C.avatar?'<div class="'+cls+'" style="background-image:url(\''+esc(C.avatar)+'\')"></div>':'<div class="'+cls+'">'+esc(initial)+'</div>'}
+function avatarHTML(cls){return C.avatar?'<div data-av class="'+cls+'" style="background-image:url(\''+esc(C.avatar)+'\')"></div>':'<div class="'+cls+'">'+esc(initial)+'</div>'}
+/* The avatar sits on a black circle: turn the logo's dark lines white so nothing disappears. */
+function brightenLogo(){if(!C.avatar)return;var img=new Image();img.crossOrigin='anonymous';img.onload=function(){try{var c=document.createElement('canvas'),w=c.width=img.naturalWidth,h=c.height=img.naturalHeight,x=c.getContext('2d');x.drawImage(img,0,0);var d=x.getImageData(0,0,w,h),p=d.data,hit=0;
+ for(var i=0;i<p.length;i+=4){if(p[i+3]>20&&(0.299*p[i]+0.587*p[i+1]+0.114*p[i+2])<90){p[i]=p[i+1]=p[i+2]=255;hit++}}
+ if(!hit)return;x.putImageData(d,0,0);C.avatar=c.toDataURL('image/png');R.querySelectorAll('[data-av]').forEach(function(n){n.style.backgroundImage='url("'+C.avatar+'")'})}catch(e){}};img.src=C.avatar}
 R.innerHTML='<style>'+css+'</style><div class="w"><div class="teaser" role="button" tabindex="0">'+avatarHTML('tav')+'<p></p><button class="tx" aria-label="Dismiss">✕</button></div>'
  +'<div class="panel" role="dialog" aria-label="Chat"><div class="head"><div class="av">'+avatarHTML('img')+'<i></i></div><div class="ht"><b></b><span></span></div><button class="hb rs" aria-label="New conversation" title="New conversation">'+I.reset+'</button><button class="hb x" aria-label="Minimize chat">'+I.down+'</button></div>'
  +'<div class="log" aria-live="polite"></div><div class="foot"><form class="box"><textarea rows="1" maxlength="500" placeholder="Write a message…" aria-label="Your message"></textarea><button class="send" type="submit" aria-label="Send" disabled>'+I.send+'</button></form>'+(C.footer?'<div class="brand">'+esc(C.footer)+'</div>':'')+'</div></div>'
- +'<button class="launch" aria-label="Open chat"><span class="pulse"></span>'+I.chat.replace('<svg','<svg class="ic1"')+I.down.replace('<svg','<svg class="ic2"')+'<span class="badge"></span></button></div>';
+ +'<button class="launch" aria-label="Open chat"><span class="pulse"></span>'+I.chat.replace('<svg','<svg class="ic1"')+I.close.replace('<svg','<svg class="ic2"')+'<span class="badge"></span></button></div>';
 var $=function(s){return R.querySelector(s)},W=$('.w'),log=$('.log'),ta=$('textarea'),send=$('.send'),teaser=$('.teaser');
-$('.ht b').textContent=C.name||'Assistant';$('.ht span').textContent=C.subtitle||'';$('.teaser p').textContent=C.teaser||'';
+brightenLogo();$('.ht b').textContent=C.name||'Assistant';$('.ht span').textContent=C.subtitle||'';$('.teaser p').textContent=C.teaser||'';
 var KEY='aifaq_chat_v2',st;try{st=JSON.parse(sessionStorage.getItem(KEY))||{}}catch(e){st={}}st.msgs=st.msgs||[];
 function save(){try{sessionStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
 function now(){return new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}
