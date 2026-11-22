@@ -1,6 +1,6 @@
 <h1 align="center">🤖 AI FAQ Chatbot Lite for WordPress</h1>
 
-<p align="center">A lightweight chat widget that answers visitor questions from <b>your own FAQ</b>, 24/7.<br/>Works without any API, or add an OpenAI key for natural AI answers grounded in your FAQ.</p>
+<p align="center">A lightweight chat widget that answers visitor questions from <b>your own FAQ</b>, 24/7.<br/>Works without any API, or add a free Google Gemini / Groq key (or OpenAI) for natural AI answers grounded in your FAQ.</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/WordPress-5.8%2B-21759B?style=for-the-badge&logo=wordpress&logoColor=white" alt="WordPress" />

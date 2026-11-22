@@ -4,7 +4,7 @@ Tags: chatbot, faq, ai, openai, chat
 Requires at least: 5.8
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,12 @@ Built from my experience creating **Monkbot**, an AI chatbot that has handled 37
 3. Open Settings → AI FAQ Chatbot.
 
 == Changelog ==
+
+= 2.0.0 =
+* New premium chat design in a Shadow DOM, so themes can no longer break it
+* Typing indicator, timestamps, quick replies, related questions, WhatsApp handoff, teaser bubble, dark theme
+* Smarter offline matching: synonyms, Bangla/Banglish, typo tolerance, several Q: lines per answer
+* Free AI providers: Google Gemini and Groq (plus OpenAI), with conversation memory
 
 = 1.0.0 =
 * First release.
